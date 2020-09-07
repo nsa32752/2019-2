@@ -1,0 +1,80 @@
+import random
+
+def pivot_firstitem(arr, low, high):
+    global first
+    if len(arr) <= 1:
+        return arr
+    pivotitem = arr[0]
+    j = low
+    for x in range(low+1, high+1):
+        first += 1
+        if(arr[x] < pivotitem):
+            j += 1
+            arr[x], arr[j] = arr[j], arr[x]
+    arr[low], arr[j] = arr[j], arr[low]
+    return pivot_firstitem(arr[0:j], 0, j-1) + [arr[j]] + pivot_firstitem(arr[j+1:], 0, len(arr[j+1:])-1)
+
+def pivot_randomitem(arr, low, high):
+    global randompick
+    if len(arr) <= 1:
+        return arr
+    idx = random.randrange(low, high+1)
+    pivotitem = arr[idx]
+    if idx != 0:
+        arr[0], arr[idx] = arr[idx], arr[0]
+    j = low
+    for x in range(low+1, high+1):
+        randompick += 1
+        if(arr[x] < pivotitem):
+            j += 1
+            arr[x], arr[j] = arr[j], arr[x]
+    arr[low], arr[j] = arr[j], arr[low]
+    return pivot_randomitem(arr[0:j], 0, j-1) + [arr[j]] + pivot_randomitem(arr[j+1:], 0, len(arr[j+1:])-1)
+
+def pivot_Robert(arr, low, high):
+    global robert
+    if len(arr) <= 1:
+        return arr
+    mid = (low+high)//2
+    pivotitem = arr[low]
+    mx = max(arr[low], arr[high], arr[mid])
+    mn = min(arr[low], arr[high], arr[mid])
+    if arr[low] != mx and arr[low] != mn:
+        pivotitem = arr[low]
+    elif arr[mid] != mx and arr[mid] != mn:
+        pivotitem = arr[mid]
+    elif arr[high] != mx and arr[high] != mn:
+        pivotitem = arr[high]
+    elif arr[mid] == arr[high] and arr[high] > arr[low]:
+        pivotitem = arr[high]
+    j = low
+    if arr.index(pivotitem) != 0:
+        idx = arr.index(pivotitem)
+        arr[low], arr[idx] = arr[idx], arr[low]
+    for x in range(low + 1, high + 1):
+        robert += 1
+        if (arr[x] < pivotitem):
+            j += 1
+            arr[x], arr[j] = arr[j], arr[x]
+    arr[low], arr[j] = arr[j], arr[low]
+    return pivot_Robert(arr[0:j], 0, j - 1) + [arr[j]] + pivot_Robert(arr[j+1:], 0, len(arr[j+1:]) - 1)
+
+
+first = 0
+randompick = 0
+robert = 0
+# inp = [6,3,9,1]
+inp = [5000, 4000, 3000, 2000, 1000, 500, 100]
+# inp = [1, 59, 27, 39, 86, 23, 12, 25, 81, 41]
+print(pivot_firstitem(inp, 0, len(inp)-1))
+print(pivot_randomitem(inp, 0, len(inp)-1))
+print(pivot_Robert(inp, 0, len(inp)-1))
+# for y in range(5):
+#     first = 0
+#     randompick = 0
+#     robert = 0
+#     inp = [random.randint(1, 1000000) for x in range(500000)]
+#     pivot_firstitem(inp, 0, len(inp)-1)
+#     pivot_randomitem(inp, 0, len(inp)-1)
+#     pivot_Robert(inp, 0, len(inp)-1)
+#     print(first, randompick, robert)
